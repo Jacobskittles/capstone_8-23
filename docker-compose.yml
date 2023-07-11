@@ -7,8 +7,35 @@ networks:
 volumes:
     prometheus_data: {}
     grafana_data: {}
+    nifi_conf:
 
 services:
+
+
+## --------------------------------------------- APACHE NIFI SECTION --------------------------------------------
+  nifi:
+    image: apache/nifi:latest
+    container_name: nifi
+    cap_add:
+      - NET_ADMIN # low port bindings
+    restart: unless-stopped
+    ports:
+      - "8080:8080/tcp" # HTTP interface
+      # - "8443:8443/tcp" # HTTPS interface
+      - "7001:7001/tcp"
+      - "514:514/tcp" # Syslog
+      - "514:514/udp" # Syslog
+      - "2055:2055/udp" # NetFlow
+    environment:
+      NIFI_WEB_HTTP_PORT: 8080
+    expose:
+      - 8080
+    volumes: 
+      - ./nifi/conf/test:/var/lib/nifi
+      - ./nifi/conf/volumes/postgresql-42.6.0.jar:/opt/nifi/nifi-current/jdbc/
+    networks:
+      - business-intelligence-net
+## --------------------------------------------- END NIFI SECTION --------------------------------------------
 
 ## --------------------------------------------- DASHBOARD SECTION --------------------------------------------
   # Container Grafana
@@ -49,6 +76,7 @@ services:
   # Database Container (postgres)
   postgres:
     container_name: pg_container
+    image: postgres:latest
     build: ./postgres
     restart: always
     environment:
