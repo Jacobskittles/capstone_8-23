@@ -5,14 +5,14 @@ networks:
     driver: bridge
 
 volumes:
-    prometheus_data: {}
-    grafana_data: {}
-    nifi_conf:
+  prometheus_data: {}
+  grafana_data: {}
+  nifi_conf:
+
 
 services:
 
-
-## --------------------------------------------- APACHE NIFI SECTION --------------------------------------------
+  ## --------------------------------------------- APACHE NIFI SECTION --------------------------------------------
   nifi:
     image: apache/nifi:latest
     container_name: nifi
@@ -30,17 +30,17 @@ services:
       NIFI_WEB_HTTP_PORT: 8080
     expose:
       - 8080
-    volumes: 
+    volumes:
       - ./nifi/conf/test:/var/lib/nifi
       - ./nifi/conf/volumes/postgresql-42.6.0.jar:/opt/nifi/nifi-current/jdbc/
     networks:
       - business-intelligence-net
-## --------------------------------------------- END NIFI SECTION --------------------------------------------
+  ## --------------------------------------------- END NIFI SECTION --------------------------------------------
 
-## --------------------------------------------- DASHBOARD SECTION --------------------------------------------
+  ## --------------------------------------------- DASHBOARD SECTION --------------------------------------------
   # Container Grafana
   grafana:
-#    image: grafana/grafana:9.0.3
+    #    image: grafana/grafana:9.0.3
     image: grafana/grafana
     container_name: grafana
     user: "0"
@@ -48,13 +48,13 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-#    env_file:
-#      - ./grafana/config.monitoring
+    #    env_file:
+    #      - ./grafana/config.monitoring
     environment:
-#      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-#      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-#      - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      #      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      #      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      #      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_DISABLE_LOGIN_FORM=false
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_SECURITY_ALLOW_EMBEDDING=true
@@ -63,16 +63,16 @@ services:
       - postgres
     expose:
       - 3000
-#    ports:
-#      - 3000:3000
+    # ports:
+    #   - "3000:3000"
     networks:
       - business-intelligence-net
     labels:
       org.label-schema.group: "business-intelligence"
-## ------------------------------------------- END DASHBOARD SECTION ------------------------------------------
+  ## ------------------------------------------- END DASHBOARD SECTION ------------------------------------------
 
 
-## --------------------------------------------- POSTGRES SECTION ---------------------------------------------
+  ## --------------------------------------------- POSTGRES SECTION ---------------------------------------------
   # Database Container (postgres)
   postgres:
     container_name: pg_container
@@ -104,9 +104,9 @@ services:
       - "3031:80"
     networks:
       - business-intelligence-net
-## ------------------------------------------- END POSTGRES SECTION -------------------------------------------
+  ## ------------------------------------------- END POSTGRES SECTION -------------------------------------------
 
-## ------------------------------------------ LOG-MONITORING SECTION ------------------------------------------
+  ## ------------------------------------------ LOG-MONITORING SECTION ------------------------------------------
   # Loki container for log aggregation
   loki:
     container_name: loki
@@ -134,9 +134,10 @@ services:
     command: -config.file=/etc/promtail/promtail-config.yaml
     networks:
       - business-intelligence-net
-## ---------------------------------------- END LOG-MONITORING SECTION ----------------------------------------
 
-## ----------------------------------------- SYSTEM-MONITORING SECTION ----------------------------------------
+  ## ---------------------------------------- END LOG-MONITORING SECTION ----------------------------------------
+
+  ## ----------------------------------------- SYSTEM-MONITORING SECTION ----------------------------------------
   prometheus:
     image: prom/prometheus:v2.37.0
     container_name: prometheus
@@ -231,10 +232,10 @@ services:
     image: caddy:2.3.0
     container_name: caddy
     ports:
-      - "3000:3000"  # Grafana's Port
-      - "9090:9090"  # Prometheus's Port
-      - "9093:9093"  # Alertmanager's Port
-      - "9091:9091"  # Pushgateway's Port
+      - "3000:3000" # Grafana's Port
+      - "9090:9090" # Prometheus's Port
+      - "9093:9093" # Alertmanager's Port
+      - "9091:9091" # Pushgateway's Port
     volumes:
       - ./caddy:/etc/caddy
     environment:
@@ -246,5 +247,5 @@ services:
       - business-intelligence-net
     labels:
       org.label-schema.group: "business-intelligence"
-## --------------------------------------- END SYSTEM-MONITORING SECTION --------------------------------------
 
+## --------------------------------------- END SYSTEM-MONITORING SECTION --------------------------------------
