@@ -32,7 +32,7 @@ services:
       - 8080
     volumes:
       - ./nifi/conf/test:/var/lib/nifi
-      - ./nifi/conf/volumes/postgresql-42.6.0.jar:/opt/nifi/nifi-current/jdbc/
+      - ./nifi/conf/volumes/postgresql-42.6.0.jar:/opt/nifi/nifi-current/jdbc/postgresql-42.6.0.jar
     networks:
       - business-intelligence-net
   ## --------------------------------------------- END NIFI SECTION --------------------------------------------
