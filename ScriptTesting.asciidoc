@@ -1,0 +1,484 @@
++*In[ ]:*+
+[source, ipython3]
+----
+def remove_newline_and_tab(input_string):
+    # Define the lambda function for filtering
+    filter_func = lambda x: x not in ['\n', '\t', '\r']
+
+    # Use filter to remove newline and tab characters from the string
+    filtered_string = ''.join(filter(filter_func, input_string))
+
+    return filtered_string
+
+# Test the function
+input_string = "Hello,\n\t\nWorld!\n\t"
+result = remove_newline_and_tab(input_string)
+print(result)  # Output: "Hello,World!"
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+from org.apache.commons.io import IOUtils
+from java.nio.charset import StandardCharsets
+from org.apache.nifi.processor.io import StreamCallback
+
+class PyStreamCallback(StreamCallback):
+    def __init__(self):
+        pass
+    def process(self, inputStream, outputStream):
+        input_string = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
+        
+        
+        
+        outputStream.write(bytearray(response.encode('utf-8')))
+
+
+flowFile = session.get()
+
+if flowFile is not None:
+    try:
+        # Get the input data and execute the PyStreamCallback
+        flowFile = session.write(flowFile, PyStreamCallback())
+        session.transfer(flowFile, REL_SUCCESS)
+    except Exception as e:
+        # In case of an error, route to "failure" relationship
+        log.error("Error processing the flow file: {}".format(e))
+        session.transfer(flowFile, REL_FAILURE)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+from org.apache.commons.io import IOUtils
+from java.nio.charset import StandardCharsets
+from org.apache.nifi.processor.io import StreamCallback
+
+import re
+
+def remove_newline_and_tab(input_string):
+    # Define the lambda function for filtering
+    filter_func = lambda x: x not in ['\n', '\t', '\r']
+
+    # Use filter to remove newline and tab characters from the string
+    filtered_string = ''.join(filter(filter_func, input_string))
+
+    return filtered_string
+
+def id_query(html_document, html_type):
+    # Define the regular expression pattern to match the opening and closing tags of the specified HTML type
+    pattern = r"<{}.*?>.*?</{}>".format(html_type, html_type)
+
+    # Use re.findall to find all occurrences of the pattern in the HTML document
+    matched_elements = re.findall(pattern, html_document, re.DOTALL)
+
+    return matched_elements
+
+def doer(html, target_type):
+    rows = map(remove_newline_and_tab, id_query(html, target_type)[1:])
+    return "\n".join(rows)
+    
+
+class PyStreamCallback(StreamCallback):
+    def __init__(self, target_html_type):
+        this.target_html_type = target_html_type
+        pass
+    def process(self, inputStream, outputStream):
+        input_string = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
+        response = doer(input_string, target_html_type)
+        outputStream.write(bytearray(response.encode('utf-8')))
+
+
+flowFile = session.get()
+
+if flowFile is not None:
+    try:
+        # Get the input data and execute the PyStreamCallback
+        flowFile = session.write(flowFile, PyStreamCallback())
+        session.transfer(flowFile, REL_SUCCESS)
+    except Exception as e:
+        # In case of an error, route to "failure" relationship
+        log.error("Error processing the flow file: {}".format(e))
+        session.transfer(flowFile, REL_FAILURE)
+----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+import requests
+
+def nifi_sim(page = 1):
+    url = "https://www.uforesearchdb.com/db/database.php?q=1&page={}".format(page)
+    r = requests.get(url)
+    return r.text
+
+import re
+
+def remove_newline_and_tab(input_string):
+    # Define the lambda function for filtering
+    filter_func = lambda x: x not in ['\n', '\t', '\r']
+
+    # Use filter to remove newline and tab characters from the string
+    filtered_string = ''.join(filter(filter_func, input_string))
+
+    return filtered_string
+
+def id_query(html_document, html_type):
+    # Define the regular expression pattern to match the opening and closing tags of the specified HTML type
+    pattern = r"<{}.*?>.*?</{}>".format(html_type, html_type)
+
+    # Use re.findall to find all occurrences of the pattern in the HTML document
+    matched_elements = re.findall(pattern, html_document, re.DOTALL)
+
+    return matched_elements
+
+def doer(html):
+    rows = map(remove_newline_and_tab, id_query(html, 'tr')[1:])
+    return "\n".join(rows)
+
+doer(nifi_sim())
+----
+
+
++*Out[3]:*+
+----'<tr><td>13-Sep-2017 11:30 PM</td><td>V-Shaped</td><td>Kearney</td><td>NE</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136157.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>13-Sep-2017 9:45 PM</td><td>Fireball</td><td>Bethel Park</td><td>PA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136151.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>13-Sep-2017 8:30 PM</td><td>Unknown</td><td>Dearborn Heights</td><td>MI</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136154.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>13-Sep-2017 2:00 PM</td><td>Other</td><td>Charlestown</td><td>RI</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136149.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>13-Sep-2017 6:12 AM</td><td>Triangle</td><td>Charlotte</td><td>NC</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136141.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>13-Sep-2017 2:36 AM</td><td>Lights Only</td><td>Milton</td><td>GA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136143.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>13-Sep-2017 12:30 AM</td><td>Circle</td><td>Montreal</td><td>QC</td><td>Canada</td><td><a href="http://nuforc.org/webreports/136/S136145.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>12-Sep-2017 10:30 PM</td><td>Sphere</td><td>Lee</td><td>FL</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136152.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>12-Sep-2017 9:00 PM</td><td>Lights Only</td><td>Cassville</td><td>MO</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136137.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>12-Sep-2017 9:00 PM</td><td>Oval</td><td>Orlando</td><td>FL</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136138.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>12-Sep-2017 9:00 PM</td><td>Lights Only</td><td>Danbury</td><td>CT</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136136.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>12-Sep-2017 8:30 PM</td><td>Circle</td><td>Khammam</td><td></td><td>India</td><td><a href="http://nuforc.org/webreports/136/S136144.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>12-Sep-2017 8:00 PM</td><td>Sphere</td><td>Salem</td><td>OR</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136146.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>12-Sep-2017 7:05 PM</td><td>Sphere</td><td>Kalamazoo</td><td>MI</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136142.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>12-Sep-2017 1:00 PM</td><td>Unknown</td><td>Las Vegas</td><td>NV</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136134.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>12-Sep-2017 6:12 AM</td><td>Lights Only</td><td>Elmwood Park</td><td>IL</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136128.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>11-Sep-2017 11:00 PM</td><td>V-Shaped</td><td>Centralia</td><td>WA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136129.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>11-Sep-2017 9:19 PM</td><td>Unknown</td><td>Vancouver</td><td>WA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136125.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>11-Sep-2017 8:38 PM</td><td>Lights Only</td><td>Bristol</td><td>VA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136147.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>11-Sep-2017 12:20 PM</td><td>Oval</td><td>Stayton</td><td>OR</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136119.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>11-Sep-2017 6:00 AM</td><td>Lights Only</td><td>Missoula</td><td>MT</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136117.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>11-Sep-2017 6:00 AM</td><td>Circle</td><td>Alto</td><td>MI</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136124.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>10-Sep-2017 10:30 PM</td><td>Fireball</td><td>New York City (Brooklyn)</td><td>NY</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136133.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>10-Sep-2017 9:10 PM</td><td>Sphere</td><td>Salem</td><td>OR</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136148.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>10-Sep-2017 8:00 PM</td><td>Other</td><td>Birmingham</td><td>AL</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136113.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>10-Sep-2017 11:05 AM</td><td>Sphere</td><td>Watertown</td><td>MA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136104.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>10-Sep-2017 10:00 AM</td><td>Lights Only</td><td>Riverside</td><td>CA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136140.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>10-Sep-2017 12:57 AM</td><td>Lights Only</td><td>Pasadena</td><td>CA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136108.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>10-Sep-2017 12:00 AM</td><td>Cylinder</td><td>Medford/Weed</td><td>CA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136127.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 10:30 PM</td><td>Lights Only</td><td>Monroe</td><td>OH</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136100.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 10:00 PM</td><td>Triangle</td><td>Redding</td><td>CA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136109.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 10:00 PM</td><td>Triangle</td><td>Boonville</td><td>MO</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136111.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 9:45 PM</td><td>Lights Only</td><td>Lacombe</td><td>AB</td><td>Canada</td><td><a href="http://nuforc.org/webreports/136/S136107.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 9:37 PM</td><td>Sphere</td><td>Macedonia</td><td>OH</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136101.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 9:30 PM</td><td>Lights Only</td><td>Newfoundland</td><td>PA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136094.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 8:08 PM</td><td>Other</td><td>Myrtle Beach</td><td>SC</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136095.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 6:12 PM</td><td>Lights Only</td><td>Long Beach</td><td>CA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136114.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 1:00 PM</td><td>Cylinder</td><td>Atlanta</td><td>GA</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136103.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 12:04 PM</td><td>Teardrop</td><td>Florence</td><td>KY</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136110.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>09-Sep-2017 9:00 AM</td><td>Lights Only</td><td>Williamson</td><td>NY</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136098.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>08-Sep-2017 9:45 PM</td><td>Triangle</td><td>Rothbury</td><td>MI</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136086.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>08-Sep-2017 9:41 PM</td><td>Sphere</td><td>Zionsville</td><td>IN</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136084.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>08-Sep-2017 9:30 PM</td><td>Sphere</td><td>Murray</td><td>UT</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136121.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>08-Sep-2017 8:30 PM</td><td>Lights Only</td><td>Syracuse</td><td>NY</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136085.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>08-Sep-2017 6:25 PM</td><td>Egg</td><td>Albuquerque</td><td>NM</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136089.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>08-Sep-2017 5:00 PM</td><td>Disk</td><td>Baltimore</td><td>MD</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136099.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>08-Sep-2017 10:00 AM</td><td>Oval</td><td>Lyons</td><td>NE</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136078.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>08-Sep-2017 8:45 AM</td><td>Sphere</td><td>Houston</td><td>TX</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136074.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>08-Sep-2017 7:00 AM</td><td>Disk</td><td>Aurora</td><td>OR</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136083.html" target="_blank">NUFORC</a></td></tr>\n<tr><td>07-Sep-2017 11:30 PM</td><td>V-Shaped</td><td>Vadnais Heights/White Bear Township</td><td>MN</td><td>USA</td><td><a href="http://nuforc.org/webreports/136/S136076.html" target="_blank">NUFORC</a></td></tr>'----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+import re
+
+def id_query(html_document, html_type):
+    # Define the regular expression pattern to match the opening and closing tags of the specified HTML type
+    pattern = r"<{}.*?>.*?</{}>".format(html_type, html_type)
+
+    # Use re.findall to find all occurrences of the pattern in the HTML document
+    matched_elements = re.findall(pattern, html_document, re.DOTALL)
+
+    return matched_elements
+
+# Test the function
+html_doc = """
+<html>
+<body>
+  <div>
+    <p>This is a paragraph.</p>
+  </div>
+  <div>
+    <h1>Title</h1>
+  </div>
+  <p>Another paragraph.</p>
+</body>
+</html>
+"""
+
+html_type_to_extract = "div"
+result = id_query(html_doc, html_type_to_extract)
+print(result)
+
+
+def get_text(html_element):
+    # Define the regular expression pattern to match the content inside the HTML element
+    pattern = r"<[^>]*>([^<]*)</[^>]*>"
+
+    # Use re.search to find the first occurrence of the pattern in the HTML element
+    match = re.search(pattern, html_element)
+
+    if match:
+        # Extract the text inside the HTML element
+        text_inside_element = match.group(1).strip()
+        return text_inside_element
+    else:
+        return None
+
+
+# Test the function
+html_element = "<p>This is a paragraph.</p>"
+result = get_text(html_element)
+print(result)  # Output: "This is a paragraph."
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+# webpage = nifi_sim()
+# tables = id_query(webpage, 'table')
+# rows = id_query(tables[0], 'tr')
+# tds = [get_text(td) for td in id_query(rows[1], 'td')]
+# print(tds)
+
+",".join([1,2,3,4])
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+from org.apache.commons.io import IOUtils
+from java.nio.charset import StandardCharsets
+from org.apache.nifi.processor.io import StreamCallback
+
+import re
+from datetime import datetime
+
+def id_query(html_document, html_type):
+    # Define the regular expression pattern to match the opening and closing tags of the specified HTML type
+    pattern = r"<{}.*?>.*?</{}>".format(html_type, html_type)
+    # Use re.findall to find all occurrences of the pattern in the HTML document
+    matched_elements = re.findall(pattern, html_document, re.DOTALL)
+    return matched_elements
+
+def get_text(html_element):
+    # Define the regular expression pattern to match the content inside the HTML element
+    pattern = r"<[^>]*>([^<]*)</[^>]*>"
+    # Use re.search to find the first occurrence of the pattern in the HTML element
+    match = re.search(pattern, html_element)
+    if match:
+        # Extract the text inside the HTML element
+        text_inside_element = match.group(1).strip()
+        return text_inside_element
+    else:
+        return None
+
+def transform_date(date_str):
+    try:
+        # Parse the input date string into a datetime object using the given format
+        date_obj = datetime.strptime(date_str, "%d-%b-%Y %I:%M %p")
+        # Convert the datetime object into the desired format
+        transformed_date_str = date_obj.strftime("%Y-%m-%d %H:%M:%S")
+        return transformed_date_str
+    except ValueError:
+        print("Invalid date format. Please provide a date in the format '13-Sep-2017 11:30 PM'")
+        return None
+    
+def transform_location(city, state, country):
+    def remove_text_in_parentheses(text):
+        return re.sub(r'\([^)]*\)', '', text).strip()
+    def remove_text_after_slash(text):
+        return text.split('/')[0].strip()
+    def remove_text_after_or(text):
+        words = text.split()
+        return ' '.join(word for i, word in enumerate(words) if word.lower() != 'or' or (i > 0 and words[i - 1].lower() != 'copper'))
+    city = remove_text_after_slash(remove_text_in_parentheses(city)).replace(',', '').replace('.', '').lower()
+    state = state.replace(',', '').replace('.', '').lower()
+    country = country.replace(',', '').replace('.', '').lower()
+    return [city, state, country]
+
+def format_row(row):
+    (event_date, shape, city, state, country, _) = [get_text(td) for td in id_query(row, 'td')]
+    new_date = transform_date(event_date)
+    (new_city, new_state, new_country) = transform_location(city, state, country)
+    return "{},{},{},{},{}".format(new_date, shape, new_city, new_state, new_country)
+
+def do_everything(webpage):
+    tables = id_query(webpage, 'table')
+    rows = id_query(tables[0], 'tr')[1:]
+    return "sight_date,shape,city,state,country\n" + "\n".join([format_row(row) for row in rows])
+
+class PyStreamCallback(StreamCallback):
+    def __init__(self):
+        pass
+    def process(self, inputStream, outputStream):
+        input_string = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
+        response = do_everything(input_string)
+        outputStream.write(bytearray(response.encode('utf-8')))
+
+
+flowFile = session.get()
+
+if flowFile is not None:
+    try:
+        # Get the input data and execute the PyStreamCallback
+        flowFile = session.write(flowFile, PyStreamCallback())
+        session.transfer(flowFile, REL_SUCCESS)
+    except Exception as e:
+        # In case of an error, route to "failure" relationship
+        log.error("Error processing the flow file: {}".format(e))
+        session.transfer(flowFile, REL_FAILURE)
+----
+
+
++*In[6]:*+
+[source, ipython3]
+----
+import re
+from datetime import datetime
+
+def id_query(html_document, html_type):
+    # Define the regular expression pattern to match the opening and closing tags of the specified HTML type
+    pattern = r"<{}.*?>.*?</{}>".format(html_type, html_type)
+    # Use re.findall to find all occurrences of the pattern in the HTML document
+    matched_elements = re.findall(pattern, html_document, re.DOTALL)
+    return matched_elements
+
+def get_text(html_element):
+    # Define the regular expression pattern to match the content inside the HTML element
+    pattern = r"<[^>]*>([^<]*)</[^>]*>"
+    # Use re.search to find the first occurrence of the pattern in the HTML element
+    match = re.search(pattern, html_element)
+    if match:
+        # Extract the text inside the HTML element
+        text_inside_element = match.group(1).strip()
+        return text_inside_element
+    else:
+        return None
+
+def transform_date(date_str):
+    try:
+        # Parse the input date string into a datetime object using the given format
+        date_obj = datetime.strptime(date_str, "%d-%b-%Y %I:%M %p")
+        # Convert the datetime object into the desired format
+        transformed_date_str = date_obj.strftime("%Y-%m-%d %H:%M:%S")
+        return transformed_date_str
+    except ValueError:
+        print("Invalid date format. Please provide a date in the format '13-Sep-2017 11:30 PM'")
+        return None
+
+def transform_location(city, state, country):
+    def remove_text_in_parentheses(text):
+        return re.sub(r'\([^)]*\)', '', text).strip()
+    def remove_text_after_slash(text):
+        return text.split('/')[0].strip()
+    def remove_text_after_or(text):
+        words = text.split()
+        return ' '.join(word for i, word in enumerate(words) if word.lower() != 'or' or (i > 0 and words[i - 1].lower() != 'copper'))
+    city = remove_text_after_slash(remove_text_in_parentheses(city)).replace(',', '').replace('.', '').lower()
+    state = state.replace(',', '').replace('.', '').lower()
+    country = country.replace(',', '').replace('.', '').lower()
+    return [city, state, country]
+
+def format_row(row):
+    (event_date, shape, city, state, country, _) = [get_text(td) for td in id_query(row, 'td')]
+    new_date = transform_date(event_date)
+    (new_city, new_state, new_country) = transform_location(city, state, country)
+    return "{},{},{},{},{}".format(new_date, shape, new_city, new_state, new_country)
+
+
+def do_everything(webpage):
+    tables = id_query(webpage, 'table')
+    rows = id_query(tables[0], 'tr')[1:]
+    return "sight_date,shape,city,state,country\n" + "\n".join([format_row(row) for row in rows])
+
+do_everything(nifi_sim())
+----
+
+
++*Out[6]:*+
+----'sight_date,shape,city,state,country\n2017-09-13 23:30:00,V-Shaped,kearney,ne,usa\n2017-09-13 21:45:00,Fireball,bethel park,pa,usa\n2017-09-13 20:30:00,Unknown,dearborn heights,mi,usa\n2017-09-13 14:00:00,Other,charlestown,ri,usa\n2017-09-13 06:12:00,Triangle,charlotte,nc,usa\n2017-09-13 02:36:00,Lights Only,milton,ga,usa\n2017-09-13 00:30:00,Circle,montreal,qc,canada\n2017-09-12 22:30:00,Sphere,lee,fl,usa\n2017-09-12 21:00:00,Lights Only,cassville,mo,usa\n2017-09-12 21:00:00,Oval,orlando,fl,usa\n2017-09-12 21:00:00,Lights Only,danbury,ct,usa\n2017-09-12 20:30:00,Circle,khammam,,india\n2017-09-12 20:00:00,Sphere,salem,or,usa\n2017-09-12 19:05:00,Sphere,kalamazoo,mi,usa\n2017-09-12 13:00:00,Unknown,las vegas,nv,usa\n2017-09-12 06:12:00,Lights Only,elmwood park,il,usa\n2017-09-11 23:00:00,V-Shaped,centralia,wa,usa\n2017-09-11 21:19:00,Unknown,vancouver,wa,usa\n2017-09-11 20:38:00,Lights Only,bristol,va,usa\n2017-09-11 12:20:00,Oval,stayton,or,usa\n2017-09-11 06:00:00,Lights Only,missoula,mt,usa\n2017-09-11 06:00:00,Circle,alto,mi,usa\n2017-09-10 22:30:00,Fireball,new york city,ny,usa\n2017-09-10 21:10:00,Sphere,salem,or,usa\n2017-09-10 20:00:00,Other,birmingham,al,usa\n2017-09-10 11:05:00,Sphere,watertown,ma,usa\n2017-09-10 10:00:00,Lights Only,riverside,ca,usa\n2017-09-10 00:57:00,Lights Only,pasadena,ca,usa\n2017-09-10 00:00:00,Cylinder,medford,ca,usa\n2017-09-09 22:30:00,Lights Only,monroe,oh,usa\n2017-09-09 22:00:00,Triangle,redding,ca,usa\n2017-09-09 22:00:00,Triangle,boonville,mo,usa\n2017-09-09 21:45:00,Lights Only,lacombe,ab,canada\n2017-09-09 21:37:00,Sphere,macedonia,oh,usa\n2017-09-09 21:30:00,Lights Only,newfoundland,pa,usa\n2017-09-09 20:08:00,Other,myrtle beach,sc,usa\n2017-09-09 18:12:00,Lights Only,long beach,ca,usa\n2017-09-09 13:00:00,Cylinder,atlanta,ga,usa\n2017-09-09 12:04:00,Teardrop,florence,ky,usa\n2017-09-09 09:00:00,Lights Only,williamson,ny,usa\n2017-09-08 21:45:00,Triangle,rothbury,mi,usa\n2017-09-08 21:41:00,Sphere,zionsville,in,usa\n2017-09-08 21:30:00,Sphere,murray,ut,usa\n2017-09-08 20:30:00,Lights Only,syracuse,ny,usa\n2017-09-08 18:25:00,Egg,albuquerque,nm,usa\n2017-09-08 17:00:00,Disk,baltimore,md,usa\n2017-09-08 10:00:00,Oval,lyons,ne,usa\n2017-09-08 08:45:00,Sphere,houston,tx,usa\n2017-09-08 07:00:00,Disk,aurora,or,usa\n2017-09-07 23:30:00,V-Shaped,vadnais heights,mn,usa'----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+def transform_location(city, state, country):
+    def remove_text_in_parentheses(text):
+        return re.sub(r'\([^)]*\)', '', text).strip()
+    def remove_text_after_slash(text):
+        return text.split('/')[0].strip()
+    def remove_text_after_or(text):
+        words = text.split()
+        return ' '.join(word for i, word in enumerate(words) if word.lower() != 'or' or (i > 0 and words[i - 1].lower() != 'copper'))
+    city = remove_text_after_slash(remove_text_in_parentheses(city)).replace(',', '').replace('.', '').lower()
+    state = state.replace(',', '').replace('.', '').lower()
+    country = country.replace(',', '').replace('.', '').lower()
+    return [city, state, country]
+
+# Test cases
+print(transform_location("Kearney", "NE", "USA")) # city=kearney&state=ne&country=usa
+print(transform_location("Khammam", "", "India")) # city=khammam&country=india
+print(transform_location("Mount Clemens", "MI", "USA")) # city=mount+clemens&state=mi&country=usa
+print(transform_location("Vacaville or Fairfield (?) (near)", "CA", "USA")) # city=vacaville&state=ca&country=usa
+print(transform_location("Tucson (Pima Co.)(copper mine S of )", "AZ", "USA")) # city=tucson&state=az&country=usa
+print(transform_location("E. Rio Vista", "CA", "USA")) # city=east+rio+vista&state=ca&country=usa
+print(transform_location("Manado", "", "Indonesia")) # city=manado&country=indonesia
+print(transform_location("New York City (Brooklyn)", "NY", "USA")) # city=new+york+city&state=ny&country=usa
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+from org.apache.commons.io import IOUtils
+from java.nio.charset import StandardCharsets
+from org.apache.nifi.processor.io import StreamCallback
+
+import re
+
+def id_query(html_document, html_type):
+    # Define the regular expression pattern to match the opening and closing tags of the specified HTML type
+    pattern = r"<{}.*?>.*?</{}>".format(html_type, html_type)
+    # Use re.findall to find all occurrences of the pattern in the HTML document
+    matched_elements = re.findall(pattern, html_document, re.DOTALL)
+    return matched_elements
+
+def get_text(html_element):
+    # Define the regular expression pattern to match the content inside the HTML element
+    pattern = r"<[^>]*>([^<]*)</[^>]*>"
+    # Use re.search to find the first occurrence of the pattern in the HTML element
+    match = re.search(pattern, html_element)
+    if match:
+        # Extract the text inside the HTML element
+        text_inside_element = match.group(1).strip()
+        return text_inside_element
+    else:
+        return None
+    
+def transform_location(city, state, country):
+    def remove_text_in_parentheses(text):
+        return re.sub(r'\([^)]*\)', '', text).strip()
+    def remove_text_after_slash(text):
+        return text.split('/')[0].strip()
+    def remove_text_after_or(text):
+        words = text.split()
+        return ' '.join(word for i, word in enumerate(words) if word.lower() != 'or' or (i > 0 and words[i - 1].lower() != 'copper'))
+    city = remove_text_after_slash(remove_text_in_parentheses(city)).replace(',', '').replace('.', '').lower()
+    state = state.replace(',', '').replace('.', '').lower()
+    country = country.replace(',', '').replace('.', '').lower()
+    return [city, state, country]
+
+def format_row(row):
+    (_, _, city, state, country, _) = [get_text(td) for td in id_query(row, 'td')]
+    (new_city, new_state, new_country) = transform_location(city, state, country)
+    return "{},{},{}".format(new_city, new_state, new_country)
+
+
+def do_everything(webpage):
+    tables = id_query(webpage, 'table')
+    rows = id_query(tables[0], 'tr')[1:]
+    return "city,state,country\n" + "\n".join([format_row(row) for row in rows])
+
+class PyStreamCallback(StreamCallback):
+    def __init__(self):
+        pass
+    def process(self, inputStream, outputStream):
+        input_string = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
+        response = do_everything(input_string)
+        outputStream.write(bytearray(response.encode('utf-8')))
+
+
+flowFile = session.get()
+
+if flowFile is not None:
+    try:
+        # Get the input data and execute the PyStreamCallback
+        flowFile = session.write(flowFile, PyStreamCallback())
+        session.transfer(flowFile, REL_SUCCESS)
+    except Exception as e:
+        # In case of an error, route to "failure" relationship
+        log.error("Error processing the flow file: {}".format(e))
+        session.transfer(flowFile, REL_FAILURE)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+${city:isEmpty():not():ifElse(city:replaceAll(" ", "+"):prepend("city="), "")):append(state:isEmpty():not():ifElse(state:replaceAll(" ", "+"):prepend("state="), "")):append(country:isEmpty():not():ifElse(country:replaceAll(" ", "+"):prepend("country="), "")}
+----
