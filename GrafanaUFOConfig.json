@@ -620,8 +620,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -758,8 +757,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -875,8 +873,7 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -988,8 +985,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1050,7 +1046,7 @@
           "table": "reports"
         }
       ],
-      "title": "Panel Title",
+      "title": "Sightings by Day of the Month",
       "type": "trend"
     },
     {
@@ -1105,8 +1101,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1241,8 +1236,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1302,7 +1296,7 @@
           }
         }
       ],
-      "title": "Panel Title",
+      "title": "Sightings by the Minute",
       "type": "trend"
     },
     {
@@ -1474,8 +1468,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -1621,8 +1614,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1703,6 +1695,6 @@
   "timezone": "",
   "title": "UFO Data",
   "uid": "bc750117-136b-40ad-a578-554f25ee39bf",
-  "version": 30,
+  "version": 31,
   "weekStart": ""
 }
