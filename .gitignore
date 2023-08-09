@@ -6,4 +6,5 @@
 postgres/
 nifi/
 nifi_registry/
+nifi/conf/nifi.properties
 mongodb/
