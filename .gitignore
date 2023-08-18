@@ -3,7 +3,6 @@
 .vscode/
 .idea/
 
-postgres/
 nifi/
 nifi_registry/
 nifi/conf/nifi.properties
