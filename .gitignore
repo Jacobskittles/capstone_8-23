@@ -3,5 +3,5 @@
 .vscode/
 .idea/
 
-postgres/
+
 neo4j/
