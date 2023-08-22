@@ -33,7 +33,6 @@ services:
     volumes:
       - ./nifi/conf/test:/var/lib/nifi
       - ./nifi/conf/volumes:/opt/nifi/nifi-current/jdbc
-      - ./nifi/conf/volumes/web_scraper.py:/opt/nifi/nifi-current/scripts/web_scraper.py
     networks:
       - business-intelligence-net
   ## --------------------------------------------- END NIFI SECTION --------------------------------------------
